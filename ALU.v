@@ -1,12 +1,13 @@
 `timescale 1ns / 1ps
 
-module ALU_rtl(
+module alu_assign(
     A,      // 
     B,      //
     CLK,    //
     RST,    //
     MODE,   //
     CMD,    //
+    RES,    //
     Flag    //    
     );
     
@@ -17,23 +18,19 @@ module ALU_rtl(
   output reg [7:0] RES = 8'bz;  
   output reg [7:0] Flag = 8'bz;
   
-  reg[8:0] temp;
+  reg [8:0] temp;  
   
-  always @ (posedge clk)
+  always @ (posedge CLK)
   begin
   
   if(RST)
   begin
-    A = 8'bx;
-    B = 8'bx;
-    MODE = 1'bx;
-    CMD = 1'bx;
     Flag = 8'bx;    
   end
   
   else
   begin 
-  if(mode)   // 1 for arithmetic block
+  if(MODE)   // 1 for arithmetic block
   begin
     case(CMD)
     4'b0000 :   //add
@@ -51,25 +48,25 @@ module ALU_rtl(
     4'b0010 :   //increment A
     begin
         temp = A+1;
-        A=temp[7:0];
+        RES=temp[7:0];
         Flag[1]=temp[8];    // overflow flag
     end
     4'b0011 :   //decrement A
     begin
         temp = A-1;
-        A=temp[7:0];
+        RES=temp[7:0];
         Flag[2]=temp[8];    // underflow flag
     end        
     4'b0100 :   //increment B
     begin
         temp = B+1;
-        B=temp[7:0];
+        RES=temp[7:0];
         Flag[1]=temp[8];    // overflow flag
     end
     4'b0101 :   //decrement B
     begin
         temp = B-1;
-        B=temp[7:0];
+        RES=temp[7:0];
         Flag[2]=temp[8];    // underflow flag
     end
     4'b0110 :   //compare
